@@ -1,0 +1,64 @@
+<Window x:Class="CameraStreaming.Views.LiveStreamWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:svc="clr-namespace:CameraStreaming.Services"
+        Title="Live Stream"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterOwner"
+        Width="640" Height="480"
+        ResizeMode="NoResize"
+        ShowInTaskbar="True"
+        KeyDown="Window_KeyDown"
+        Closed="Window_Closed"
+        SizeChanged="Window_SizeChanged"
+        MouseEnter="Window_MouseEnter"
+        MouseLeave="Window_MouseLeave"
+        Icon="/Icons/app.ico">
+
+    <Grid>
+        <!-- 圆形裁剪（仅画面区域，圆形模式下窗口本身可见区域更大） -->
+        <Border x:Name="windowBackground" Background="Black">
+            <Border.Clip>
+                <EllipseGeometry x:Name="circleClip" RadiusX="320" RadiusY="240" Center="320,240"/>
+            </Border.Clip>
+            <!-- 画面铺满窗体 -->
+            <Image x:Name="previewImage" Stretch="Fill"/>
+        </Border>
+
+        <!-- 右下角拖拽拉伸热区（覆盖右下角，与GRIP_SIZE匹配） -->
+        <Grid x:Name="resizeOverlay" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+              Width="48" Height="48" Cursor="SizeNWSE" Opacity="0"
+              Background="Transparent"
+              MouseLeftButtonDown="resizeOverlay_MouseLeftButtonDown">
+            <Path Data="M8,40 L40,40 M40,40 L40,8 M16,40 L40,16 M24,40 L40,24"
+                  Stroke="#AA000000" StrokeThickness="3" StrokeEndLineCap="Round"
+                  StrokeLineJoin="Round" UseLayoutRounding="True"/>
+        </Grid>
+
+        <!-- 右上角关闭按钮（不受圆形裁剪影响） -->
+        <Grid x:Name="closeOverlay" HorizontalAlignment="Right" VerticalAlignment="Top"
+              Width="40" Height="40" Margin="4" Opacity="0">
+            <Button x:Name="btnClose" Content="✕" Width="36" Height="36" Margin="2"
+                    Click="btnClose_Click" ToolTip="Close (Esc)">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="btnBorder" Background="#66000000"
+                                CornerRadius="18" Padding="0">
+                            <TextBlock x:Name="btnText" Text="{TemplateBinding Content}"
+                                       FontSize="16" Foreground="#CCFFFFFF"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="btnBorder" Property="Background" Value="#CCFF0000"/>
+                                <Setter TargetName="btnText" Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>

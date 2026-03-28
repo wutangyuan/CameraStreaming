@@ -1,0 +1,111 @@
+﻿<Window x:Class="CameraStreaming.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CameraStreaming"
+        xmlns:svc="clr-namespace:CameraStreaming.Services"
+        mc:Ignorable="d"
+        Title="{Binding [MainWindow_Title], Source={x:Static svc:LocalizationService.Instance}}" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen"
+        KeyDown="Window_KeyDown"
+        Background="#1E1E1E"
+        Icon="/Icons/app.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部工具栏 -->
+        <Border Grid.Row="0" Background="#2D2D2D" Padding="12,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button x:Name="btnSettings" Content="{Binding [Settings], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Margin="0,0,8,0" Padding="10,0"
+                            Click="btnSettings_Click" Style="{DynamicResource ToolButtonStyle}"/>
+                    <Button x:Name="btnRefresh" Content="{Binding [Refresh], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Margin="0,0,8,0" Padding="10,0"
+                            Click="btnRefresh_Click" Style="{DynamicResource ToolButtonStyle}"/>
+                    <Button x:Name="btnMirror" Content="{Binding [Mirror], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Margin="0,0,8,0" Padding="10,0"
+                            Click="btnMirror_Click" Style="{DynamicResource ToolButtonStyle}"/>
+                    <Button x:Name="btnLive" Content="{Binding [LiveStream], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Padding="10,0"
+                            Click="btnLive_Click" Style="{DynamicResource ToolButtonStyle}"/>
+                </StackPanel>
+
+                <TextBlock Grid.Column="1" x:Name="txtStatus" VerticalAlignment="Center"
+                           Foreground="#999999" FontSize="13" Margin="12,0,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- 视频显示区域 -->
+        <Border Grid.Row="1" Margin="8" BorderBrush="#444444" BorderThickness="1"
+                Background="Black" CornerRadius="4">
+            <Grid>
+                <Image x:Name="cameraImage" Stretch="Uniform"/>
+                <!-- 无画面时提示 -->
+                <TextBlock x:Name="txtNoSignal" Text="{Binding [NoSignal], Source={x:Static svc:LocalizationService.Instance}}" FontSize="20" Foreground="#555555"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+            </Grid>
+        </Border>
+
+        <!-- 底部状态栏 -->
+        <Border Grid.Row="2" Background="#2D2D2D" Padding="12,6">
+            <TextBlock x:Name="txtHint" Foreground="#666666" FontSize="12">
+                <Run x:Name="runShortcutPrefix"/>
+                <Run x:Name="runCtrlC" Text="Ctrl+C" FontWeight="Bold"/>
+                <Run x:Name="runPreviewDesc"/>
+                <Run Text="  |  "/>
+                <Run x:Name="runCtrlM" Text="Ctrl+M" FontWeight="Bold"/>
+                <Run x:Name="runMirrorDesc"/>
+            </TextBlock>
+        </Border>
+
+        <!-- Loading 遮罩层 -->
+        <Grid x:Name="loadingOverlay" Grid.Row="0" Grid.RowSpan="3" Background="#CC000000" Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="txtLoadingMsg" FontSize="16" Foreground="White"
+                           HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                <ProgressBar Width="200" Height="4" IsIndeterminate="True"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+    <Window.Resources>
+        <Style x:Key="ToolButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#3D3D3D"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="6,4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#4D4D4D"/>
+                                <Setter Property="BorderBrush" Value="#888888"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#666666"/>
+                                <Setter Property="Background" Value="#2D2D2D"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+</Window>
