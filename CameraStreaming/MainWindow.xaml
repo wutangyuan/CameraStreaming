@@ -28,13 +28,13 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <Button x:Name="btnSettings" Content="{Binding [Settings], Source={x:Static svc:LocalizationService.Instance}}" Width="76" Height="32" Margin="0,0,8,0"
+                    <Button x:Name="btnSettings" Content="{Binding [Settings], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Margin="0,0,8,0" Padding="10,0"
                             Click="btnSettings_Click" Style="{DynamicResource ToolButtonStyle}"/>
-                    <Button x:Name="btnRefresh" Content="{Binding [Refresh], Source={x:Static svc:LocalizationService.Instance}}" Width="76" Height="32" Margin="0,0,8,0"
+                    <Button x:Name="btnRefresh" Content="{Binding [Refresh], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Margin="0,0,8,0" Padding="10,0"
                             Click="btnRefresh_Click" Style="{DynamicResource ToolButtonStyle}"/>
-                    <Button x:Name="btnMirror" Content="{Binding [Mirror], Source={x:Static svc:LocalizationService.Instance}}" Width="76" Height="32" Margin="0,0,8,0"
+                    <Button x:Name="btnMirror" Content="{Binding [Mirror], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Margin="0,0,8,0" Padding="10,0"
                             Click="btnMirror_Click" Style="{DynamicResource ToolButtonStyle}"/>
-                    <Button x:Name="btnLive" Content="{Binding [LiveStream], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" Height="32" MinWidth="76" Padding="10,0"
+                    <Button x:Name="btnLive" Content="{Binding [LiveStream], Source={x:Static svc:LocalizationService.Instance}}" Width="Auto" MinWidth="80" Height="32" Padding="10,0"
                             Click="btnLive_Click" Style="{DynamicResource ToolButtonStyle}"/>
                 </StackPanel>
 
