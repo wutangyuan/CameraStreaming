@@ -6,12 +6,15 @@ using OpenCvSharp.WpfExtensions;
 using CameraStreaming.Models;
 using CameraStreaming.Services;
 using CameraStreaming.Views;
+using log4net;
 using WpfWindow = System.Windows.Window;
 
 namespace CameraStreaming
 {
     public partial class MainWindow : WpfWindow
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MainWindow));
+
         [DllImport("user32.dll")]
         private static extern IntPtr FindWindow(string? lpClassName, string lpWindowName);
 
@@ -64,11 +67,13 @@ namespace CameraStreaming
             }
             _lang.Language = _config.Language;
             _cameraService.FrameCaptured += OnFrameCaptured;
+            Log.Info($"主窗口加载完成，语言={_lang.Language}");
             await ConnectCameraAsync();
         }
 
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
+            Log.Info("主窗口关闭");
             _cameraService.FrameCaptured -= OnFrameCaptured;
             _cameraService.Dispose();
         }
@@ -92,6 +97,7 @@ namespace CameraStreaming
 
         private async System.Threading.Tasks.Task ConnectCameraAsync()
         {
+            Log.Info("开始连接摄像头...");
             ShowLoading(_lang["Connecting"]);
 
             txtStatus.Text = _lang["Connecting"];
@@ -124,6 +130,7 @@ namespace CameraStreaming
                 default:
                     txtStatus.Text = _lang["ConnectFailed"];
                     txtStatus.Foreground = System.Windows.Media.Brushes.Red;
+                    Log.Error("摄像头连接失败");
                     break;
             }
         }
@@ -165,9 +172,11 @@ namespace CameraStreaming
                 return;
             }
 
+            Log.Info("打开直播预览窗口");
             var liveWindow = new LiveStreamWindow(_cameraService, _config.WindowShape);
             liveWindow.Closed += (s, e) =>
             {
+                Log.Info("直播预览窗口关闭");
                 this.Show();
             };
             liveWindow.Owner = this;
@@ -206,6 +215,7 @@ namespace CameraStreaming
         private void ToggleMirror()
         {
             _cameraService.Mirror = !_cameraService.Mirror;
+            Log.Info($"镜像模式: {(_cameraService.Mirror ? "开启" : "关闭")}");
             if (_cameraService.Mirror)
             {
                 btnMirror.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3D, 0x5A, 0x80));
