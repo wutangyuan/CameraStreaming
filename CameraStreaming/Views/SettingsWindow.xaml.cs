@@ -5,12 +5,15 @@ using System.Windows;
 using System.Windows.Controls;
 using CameraStreaming.Models;
 using CameraStreaming.Services;
+using log4net;
 using WpfWindow = System.Windows.Window;
 
 namespace CameraStreaming.Views
 {
     public partial class SettingsWindow : WpfWindow
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SettingsWindow));
+
         private CameraConfig _config = new CameraConfig();
         private List<CameraInfo>? _cameras;
         private readonly LocalizationService _lang = LocalizationService.Instance;
@@ -77,6 +80,7 @@ namespace CameraStreaming.Views
                     _config.Language = lang;
                     _lang.Language = lang;
                     ConfigService.SaveConfig(_config);
+                    Log.Info($"语言切换为: {lang}");
                 }
             }
         }
@@ -131,7 +135,7 @@ namespace CameraStreaming.Views
             {
                 cmbCameras.Items.Add(new ComboBoxItem { Content = _lang["DetectCameraFailed"] });
                 cmbCameras.SelectedIndex = 0;
-                Debug.WriteLine($"检测摄像头异常: {ex.Message}");
+                Log.Error($"检测摄像头异常: {ex.Message}", ex);
             }
         }
 
@@ -204,11 +208,13 @@ namespace CameraStreaming.Views
                     _config.WindowShape = shapeItem.Tag.ToString()!;
                 }
 
+                Log.Info($"设置已保存: 摄像头={_config.Index}, 分辨率={_config.Width}x{_config.Height}, 帧率={_config.Fps}, 窗口形状={_config.WindowShape}");
                 DialogResult = true;
                 Close();
             }
             catch (Exception ex)
             {
+                Log.Error($"保存设置失败: {ex.Message}", ex);
                 MessageBox.Show(this, string.Format(_lang["SaveSettingsFailed"], ex.Message), _lang["Error"],
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }

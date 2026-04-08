@@ -11,6 +11,6 @@
     <Deploy />
   </Project>
   <Project Path="CameraStreaming/CameraStreaming.csproj">
-    <Platform Solution="Debug|x64" Project="x64" />
+    <Platform Solution="*|x64" Project="x64" />
   </Project>
 </Solution>

@@ -5,6 +5,7 @@ using System.Windows.Media;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using CameraStreaming.Services;
+using log4net;
 using WpfWindow = System.Windows.Window;
 using WpfPoint = System.Windows.Point;
 
@@ -12,6 +13,8 @@ namespace CameraStreaming.Views
 {
     public partial class LiveStreamWindow : WpfWindow
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LiveStreamWindow));
+
         private readonly CameraService _cameraService;
         private readonly LocalizationService _lang = LocalizationService.Instance;
 
@@ -29,6 +32,7 @@ namespace CameraStreaming.Views
             _isCircle = windowShape != "square";
             _cameraService.FrameCaptured += OnFrameCaptured;
             SourceInitialized += (_, _) => ApplyShape();
+            Log.Info($"直播窗口创建: 窗口形状={windowShape}");
         }
 
         #region Frame Rendering
@@ -82,6 +86,7 @@ namespace CameraStreaming.Views
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            Log.Info("直播窗口关闭");
             _cameraService.FrameCaptured -= OnFrameCaptured;
             lock (_frameLock)
             {
@@ -171,6 +176,7 @@ namespace CameraStreaming.Views
 
         private void DuplicateWindow()
         {
+            Log.Info("复制直播窗口");
             var clone = new LiveStreamWindow(_cameraService, _isCircle ? "circle" : "square");
             clone.Width = ActualWidth;
             clone.Height = ActualHeight;
