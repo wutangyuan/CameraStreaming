@@ -125,3 +125,9 @@
 
 1、主窗口下部分按钮在英文的环境下，显示不全
 
+
+1、添加log4Net,在关键的位置打日志。日志输出的路径为：%appdata%\CameraStreaming\logs
+
+
+1、在打包成msix之后，安装后的程序，日志的输出也是需要到%appdata%\CameraStreaming\logs
+2、msxi安装之后，程序，需要设置为开机自启动
